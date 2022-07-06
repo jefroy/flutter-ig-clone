@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ig_clone/responsive/mobile_screen_layout.dart';
 import 'package:ig_clone/responsive/responsive_layout_screen.dart';
 import 'package:ig_clone/responsive/web_screen_layout.dart';
+import 'package:ig_clone/screens/login_screen.dart';
+import 'package:ig_clone/screens/signup_screen.dart';
 import 'package:ig_clone/utils/colors.dart';
 
 Future<void> main() async {
@@ -38,10 +40,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.dark().copyWith(
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
-        home: const ResponsiveLayout(
-          // const since no dynamic values used in constructors
-          mobileScreenLayout: MobileScreenLayout(),
-          webScreenLayout: WebScreenLayout(),
-        ));
+        // home: const ResponsiveLayout(
+        //   // const since no dynamic values used in constructors
+        //   mobileScreenLayout: MobileScreenLayout(),
+        //   webScreenLayout: WebScreenLayout(),
+        // );
+        home: SignUpScreen(),
+    );
   }
 }
