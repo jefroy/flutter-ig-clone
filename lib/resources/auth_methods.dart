@@ -48,7 +48,7 @@ class AuthMethods {
           'photoUrl' : photoUrl,
         }); // use ! so we dont query null
 
-        // another way to do it
+        // another way to do it, but less effective
         // await _firestore.collection('users').add({
         //   'email': email,
         //   'password': password,
@@ -60,7 +60,15 @@ class AuthMethods {
 
         res = "success!";
       }
-    } catch (e) {
+    }
+    // on FirebaseAuthException catch (e){
+    //   if (e.code == 'invalid-email'){
+    //     res = "something wrong with the email entered";
+    //   } else if (e.code == 'invalid-email'){
+    //     res = "pass word"
+    //   }
+    // }
+    catch (e) {
       res = e.toString();
     }
     return res;

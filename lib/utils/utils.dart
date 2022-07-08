@@ -5,8 +5,17 @@ pickImage(ImageSource source) async {
   final ImagePicker _imagePicker = ImagePicker();
   XFile? _file = await _imagePicker.pickImage(source: source);
 
-  if(_file != null) { // user did pick an img from their gal
+  if (_file != null) {
+    // user did pick an img from their gal
     return await _file.readAsBytes();
   }
   print('no image selected.'); // user did not pick an img from their gal
+}
+
+showSnackBar(String content, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(content),
+    ),
+  );
 }
