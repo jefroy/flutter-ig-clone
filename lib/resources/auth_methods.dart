@@ -73,4 +73,39 @@ class AuthMethods {
     }
     return res;
   }
+
+  Future<String> loginUser ({
+    required String email,
+    required String password,
+  }) async {
+    String res = "error occured";
+    print("logging in: ");
+    print(email);
+    print(password);
+    try {
+      if (email.isNotEmpty || password.isNotEmpty){
+        UserCredential? loggedInUser = null;
+        loggedInUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
+        print(loggedInUser);
+        if(loggedInUser != null){
+          res = "logged in hehe";
+        }
+      } else {
+        res = "Please enter all fields";
+      }
+    }
+    on FirebaseAuthException catch (e){
+      print(e.code);
+      if (e.code == 'invalid-email'){
+        res = "something wrong with the email entered";
+      } else if (e.code == 'invalid-email'){
+        res = "pass word";
+      }
+    }
+    catch (e) {
+      res = e.toString();
+    }
+    return res;
+  }
+
 }
