@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ig_clone/models/custom_user.dart';
 import 'package:ig_clone/resources/storage_methods.dart';
 
 class AuthMethods {
@@ -20,11 +21,11 @@ class AuthMethods {
     String res = "error occured registering user.";
     try {
       if (email.isNotEmpty ||
-          password.isNotEmpty ||
-          username.isNotEmpty ||
-          bio.isNotEmpty
+              password.isNotEmpty ||
+              username.isNotEmpty ||
+              bio.isNotEmpty
           // file!.isNotEmpty
-      ) {
+          ) {
         _auth.signInAnonymously();
         // valid data, register user now
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
@@ -38,15 +39,16 @@ class AuthMethods {
         );
         print(photoUrl);
         // add user to db
-        await _firestore.collection('users').doc(cred.user!.uid).set({
-          'email': email,
-          'password': password,
-          'username': username,
-          'bio': bio,
-          'followers': [], // list of uids
-          'following': [], // list of uids
-          'photoUrl' : photoUrl,
-        }); // use ! so we dont query null
+        CustomUser user = CustomUser(
+          email: email,
+          password: password,
+          username: username,
+          bio: bio,
+          photoUrl: photoUrl,
+          followers: [],
+          following: [],
+        );
+        await _firestore.collection('users').doc(cred.user!.uid).set(user.toJson()); // use ! so we dont query null
 
         // another way to do it, but less effective
         // await _firestore.collection('users').add({
@@ -74,7 +76,7 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> loginUser ({
+  Future<String> loginUser({
     required String email,
     required String password,
   }) async {
@@ -83,29 +85,27 @@ class AuthMethods {
     print(email);
     print(password);
     try {
-      if (email.isNotEmpty || password.isNotEmpty){
+      if (email.isNotEmpty || password.isNotEmpty) {
         UserCredential? loggedInUser = null;
-        loggedInUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
+        loggedInUser = await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
         print(loggedInUser);
-        if(loggedInUser != null){
+        if (loggedInUser != null) {
           res = "logged in hehe";
         }
       } else {
         res = "Please enter all fields";
       }
-    }
-    on FirebaseAuthException catch (e){
+    } on FirebaseAuthException catch (e) {
       print(e.code);
-      if (e.code == 'invalid-email'){
+      if (e.code == 'invalid-email') {
         res = "something wrong with the email entered";
-      } else if (e.code == 'invalid-email'){
+      } else if (e.code == 'invalid-email') {
         res = "pass word";
       }
-    }
-    catch (e) {
+    } catch (e) {
       res = e.toString();
     }
     return res;
   }
-
 }
