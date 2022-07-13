@@ -1,0 +1,41 @@
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ig_clone/models/post_.dart';
+import 'package:ig_clone/resources/storage_methods.dart';
+import 'package:uuid/uuid.dart';
+
+class FirestoreMethods {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<String> uploadPost({
+    required String desc,
+    required Uint8List file,
+    required String uid,
+    required String username,
+    required String profImage,
+  }) async {
+    String res = 'upload post error';
+    try {
+      String photoUrl = await StorageMethods()
+          .uploadImageToStorage(childName: 'posts', file: file, isPost: true);
+      String postID = const Uuid().v1();
+      Post post = Post(
+        desc: desc,
+        uid: uid,
+        username: username,
+        postID: postID,
+        postUrl: photoUrl,
+        datePublished: DateTime.now(),
+        profImage: profImage,
+        likes: [],
+      );
+      _firestore.collection('posts').doc(postID).set(post.toJson());
+      res = "success";
+    } catch (e) {
+      res = "error occured uploading post";
+      print(e);
+    }
+    return res;
+  }
+}
