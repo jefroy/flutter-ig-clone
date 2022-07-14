@@ -49,6 +49,7 @@ class AuthMethods {
         // add user to db
         CustomUser user = CustomUser(
           email: email,
+          uid: cred.user!.uid,
           password: password,
           username: username,
           bio: bio,

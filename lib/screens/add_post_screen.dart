@@ -130,7 +130,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         actions: [
           TextButton(
             onPressed: () => postImage(
-              uid: userProvider.getUser.email,
+              uid: userProvider.getUser.uid,
               username: userProvider.getUser.username,
               profImage: userProvider.getUser.photoUrl,
             ),
