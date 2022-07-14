@@ -158,7 +158,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                backgroundImage: MemoryImage(_file!),
+                backgroundImage: NetworkImage(
+                  userProvider.getUser.photoUrl
+                ),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.45,
