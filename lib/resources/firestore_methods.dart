@@ -8,6 +8,24 @@ import 'package:uuid/uuid.dart';
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> likePost(String postId, String uid, List likes) async {
+    try {
+      if (likes.contains(uid)){
+        // dislike post
+        await _firestore.collection('posts').doc(postId).update({
+          'likes' : FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        // like the post
+        await _firestore.collection('posts').doc(postId).update({
+          'likes' : FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (e, s) {
+      print(s);
+    }
+  }
+
   Future<String> uploadPost({
     required String desc,
     required Uint8List file,
