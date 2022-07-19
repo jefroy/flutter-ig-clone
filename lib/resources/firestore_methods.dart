@@ -9,6 +9,17 @@ import 'package:uuid/uuid.dart';
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<String> deletePost(postID) async {
+    String res = 'error occured';
+    try {
+      await _firestore.collection('posts').doc(postID).delete();
+      res = "✅ deleted post $postID ✅";
+    } catch (e, s) {
+      print(s);
+    }
+    return res;
+  }
+
   Future<String> postComment(
     String postID,
     String text,
@@ -35,11 +46,11 @@ class FirestoreMethods {
             .collection('comments')
             .doc(commentId)
             .set(comment.toJson());
-        return res;
+        res = "✅ comment posted ✅";
       }
     } catch (e, s) {
       print(s);
-      return e.toString();
+      res = e.toString();
     }
     return res;
   }

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ig_clone/models/custom_user.dart';
 import 'package:ig_clone/providers/user_provider.dart';
 import 'package:ig_clone/utils/global_variables.dart';
+import 'package:ig_clone/utils/utils.dart';
 import 'package:ig_clone/widgets/like_animation.dart';
 import 'package:ig_clone/resources/firestore_methods.dart';
 import 'package:intl/intl.dart';
@@ -32,31 +34,31 @@ class _PostCardState extends State<PostCard> {
   }
 
   fetchCommentLen() async {
-    // try {
-    //   QuerySnapshot snap = await FirebaseFirestore.instance
-    //       .collection('posts')
-    //       .doc(widget.snap['postID'])
-    //       .collection('comments')
-    //       .get();
-    //   commentLen = snap.docs.length;
-    // } catch (err) {
-    //   showSnackBar(
-    //     context,
-    //     err.toString(),
-    //   );
-    // }
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postID'])
+          .collection('comments')
+          .get();
+      commentLen = snap.docs.length;
+    } catch (err) {
+      showSnackBar(
+        err.toString(),
+        context,
+      );
+    }
     setState(() {});
   }
 
   deletePost(String postID) async {
-    // try {
-    //   await FireStoreMethods().deletePost(postID);
-    // } catch (err) {
-    //   showSnackBar(
-    //     context,
-    //     err.toString(),
-    //   );
-    // }
+    try {
+      await FirestoreMethods().deletePost(postID);
+    } catch (err) {
+      showSnackBar(
+        err.toString(),
+        context,
+      );
+    }
   }
 
   @override
@@ -281,7 +283,7 @@ class _PostCardState extends State<PostCard> {
                           ),
                         ),
                         TextSpan(
-                          text: ' ${widget.snap['description']}',
+                          text: ' ${widget.snap['desc']}',
                         ),
                       ],
                     ),
