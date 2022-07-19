@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ig_clone/models/comment.dart';
 import 'package:ig_clone/models/post_.dart';
 import 'package:ig_clone/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
@@ -8,17 +9,52 @@ import 'package:uuid/uuid.dart';
 class FirestoreMethods {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<String> postComment(
+    String postID,
+    String text,
+    String uid,
+    String name,
+    String profilePic,
+  ) async {
+    String res = "comment error";
+    try {
+      if (text.isNotEmpty) {
+        String commentId = const Uuid().v1();
+        Comment comment = Comment(
+          text: text,
+          uid: uid,
+          username: name,
+          datePublished: DateTime.now(),
+          commentId: commentId,
+          profImage: profilePic,
+          likes: [],
+        );
+        _firestore
+            .collection('posts')
+            .doc(postID)
+            .collection('comments')
+            .doc(commentId)
+            .set(comment.toJson());
+        return res;
+      }
+    } catch (e, s) {
+      print(s);
+      return e.toString();
+    }
+    return res;
+  }
+
   Future<void> likePost(String postId, String uid, List likes) async {
     try {
-      if (likes.contains(uid)){
+      if (likes.contains(uid)) {
         // dislike post
         await _firestore.collection('posts').doc(postId).update({
-          'likes' : FieldValue.arrayRemove([uid]),
+          'likes': FieldValue.arrayRemove([uid]),
         });
       } else {
         // like the post
         await _firestore.collection('posts').doc(postId).update({
-          'likes' : FieldValue.arrayUnion([uid]),
+          'likes': FieldValue.arrayUnion([uid]),
         });
       }
     } catch (e, s) {
